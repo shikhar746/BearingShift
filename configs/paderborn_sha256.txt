@@ -1,0 +1,1 @@
+# SHA-256 of each Paderborn archive, recorded on first download. Format: <sha256>  <file>
