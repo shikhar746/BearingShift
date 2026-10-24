@@ -67,8 +67,6 @@ def plot_ladder(summary, path, level="window"):
                 continue
             ax.errorbar(x, rows[f"{metric}_mean"], yerr=rows[f"{metric}_std"], color=color, lw=2,
                         marker="o", ms=8, mec="white", mew=2, capsize=0, elinewidth=2, label=model)
-            ax.annotate(model, (x[-1], rows[f"{metric}_mean"].iloc[-1]), xytext=(8, 0),
-                        textcoords="offset points", va="center", fontsize=8, color=MUTED)
         ax.set_title(title, loc="left", color=INK, fontsize=11)
         ax.set_xticks(x, [LADDER_LABELS[s] for s in splits], fontsize=8, color=MUTED)
         ax.set_xlim(-0.3, len(splits) - 0.3)
@@ -78,8 +76,9 @@ def plot_ladder(summary, path, level="window"):
         for side in ("top", "right", "left"):
             ax.spines[side].set_visible(False)
         ax.spines["bottom"].set_color(GRID)
-    axes[0].legend(frameon=False, fontsize=8, loc="lower left", labelcolor=MUTED)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper right", ncol=len(labels), frameon=False, fontsize=8, labelcolor=MUTED)
     fig.suptitle(f"Leakage ladder ({level} level): mean ± std across splits", x=0.06, ha="left", color=INK)
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(path, dpi=150)
     plt.close(fig)

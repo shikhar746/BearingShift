@@ -1,0 +1,55 @@
+# Main experiment on the real Paderborn data. Every choice is explained in DECISIONS.md.
+seed: 42
+
+paths:
+  archive_dir: data/archives/paderborn
+  raw_dir: data/raw/paderborn
+  index: data/processed/index.csv
+  feature_cache_dir: data/interim
+  results_dir: results
+
+dataset:
+  bearing_table: configs/paderborn_bearings.csv
+  # Download location as documented by the KAt data center (verify before use).
+  download_base_url: https://groups.uni-paderborn.de/kat/BearingDataCenter/
+  fs_hz: 64000
+  vibration_channel: vibration_1
+  recordings_per_condition: 20
+
+# Test bearing type 6203 (Lessmeier et al. 2016 / KAt documentation; verify).
+geometry:
+  n_balls: 8
+  ball_diameter_mm: 6.75
+  pitch_diameter_mm: 28.55
+  contact_angle_deg: 0.0
+
+windowing:
+  window_s: 1.0
+  overlap: 0.0
+
+features:
+  bands_hz: [[0, 1000], [1000, 2000], [2000, 4000], [4000, 8000], [8000, 16000], [16000, 32000]]
+  envelope_band_hz: [2000, 10000]
+  n_harmonics: 3
+  peak_search_bins: 1
+  background_orders: [0.5, 12.0]
+
+split_types: [random_window, recording, condition, bearing]
+splits:
+  random_window: {n_repeats: 20, test_size: 0.25}
+  recording: {n_repeats: 20, test_size: 0.25}
+  condition: {}
+  bearing: {n_repeats: 20, test_fraction: 0.25}
+
+models: [majority, physics_rule, logistic_time, lightgbm]
+
+lightgbm:
+  inner_folds: 3
+  param_grid:
+    num_leaves: [7, 15]
+    n_estimators: [100, 300]
+    learning_rate: [0.05, 0.1]
+    min_child_samples: [20]
+
+# If bearing-wise LightGBM macro-F1 is above this, treat it as suspected leakage.
+leakage_alarm_f1: 0.95
