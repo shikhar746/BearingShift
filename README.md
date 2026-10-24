@@ -58,6 +58,27 @@ Plots: `results/leakage_ladder_window.png`, `results/leakage_ladder_recording.pn
 
 SHAP finding (defect-frequency features vs condition artefacts): [placeholder].
 
+## What published work reports (for comparison, not our results)
+
+These numbers are copied from the papers, so their setups differ from ours. Our own numbers go in the table above once `scripts/run_experiment.py` has run.
+
+**Vieira et al. (arXiv:2509.22267), Paderborn, macro-AUROC, mean ± std.** Healthy + real-damage bearings only, signals resampled to 42 kHz, multi-label formulation.
+
+| Split (their Table 12, 20 splits, WDCNN) | Time input | Envelope-spectrum input |
+|---|---|---|
+| No leakage (bearing-wise) | 54.25% ± 17.79% | 76.98% ± 8.51% |
+| Condition-wise (bearing-level leakage) | 86.88% ± 14.55% | 87.79% ± 18.50% |
+| Repetition-wise (bearing-level leakage) | 98.57% ± 2.15% | 99.99% ± 0.01% |
+| Segmentation-level leakage | 98.56% ± 2.16% | 100.00% ± 0.01% |
+
+Their leakage-free benchmark (Table 9, 100 test splits): WDCNN on envelope spectrum 79.56% ± 13.07%, Random Forest on time + envelope features 69.76% ± 15.72%, SVM 64.41% ± 15.83%.
+
+**Lessmeier et al. (2016), the dataset paper, accuracy, vibration features, setting N15_M07_F10.**
+- Trained on artificial damage, tested on real damage (Table 9): 62.3%–75.0% depending on the algorithm (ensemble best).
+- Trained and tested on real-damage bearings (Table 11): best 98.5% (CART, RF, ensemble).
+
+How to read our results against these: if our bearing-wise score lands far above the leakage-free numbers here, the first suspect is a leak in our pipeline, not a better model.
+
 ## Reproduce
 
 ```bash
