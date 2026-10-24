@@ -1,0 +1,11 @@
+# Pinned so results are reproducible. Tested with Python 3.13.
+numpy==2.5.4
+scipy==1.18.1
+pandas==3.1.0
+scikit-learn==1.9.1
+lightgbm==4.7.0
+shap==0.54.1
+matplotlib==3.11.2
+PyYAML==6.0.3
+rarfile==4.5
+pytest==9.1.1

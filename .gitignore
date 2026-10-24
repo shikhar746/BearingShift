@@ -1,0 +1,11 @@
+# Raw and derived data never go into git (size + CC BY-NC licence).
+data/
+# Smoke-test outputs on synthetic data are not results.
+results/smoke/
+
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
