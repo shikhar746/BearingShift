@@ -17,8 +17,7 @@ import hashlib
 import urllib.request
 from pathlib import Path
 
-import yaml
-
+from bearingshift.config import load_config
 from bearingshift.data import load_bearing_table
 
 CHECKSUM_FILE = Path("configs/paderborn_sha256.txt")
@@ -54,7 +53,7 @@ def main():
     parser.add_argument("--yes", action="store_true", help="actually download")
     parser.add_argument("--extract", action="store_true", help="extract downloaded archives")
     args = parser.parse_args()
-    cfg = yaml.safe_load(open(args.config))
+    cfg = load_config(args.config)
 
     base_url = cfg["dataset"]["download_base_url"]
     archive_dir = Path(cfg["paths"]["archive_dir"])

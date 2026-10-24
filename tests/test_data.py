@@ -14,6 +14,7 @@ def test_bearing_table_matches_documented_counts():
     assert table["damage_type"].value_counts().to_dict() == {"healthy": 6, "artificial": 12, "real": 14}
     # Combined-damage bearings have no single 3-class label.
     assert table.loc[table["label"].isna(), "bearing_id"].tolist() == ["KB23", "KB24", "KB27"]
+    assert table["source"].notna().all()
 
 
 def test_parse_filename():
@@ -39,3 +40,11 @@ def test_build_index_rejects_file_in_wrong_folder(tmp_path):
     write_recording(tmp_path / "KA03" / "N15_M07_F10_KA01_1.mat", np.zeros(10))
     with pytest.raises(ValueError):
         build_index(tmp_path, load_bearing_table(TABLE))
+
+
+def test_config_inherits_from_base():
+    from bearingshift.config import load_config
+    base, smoke = load_config("configs/default.yaml"), load_config("configs/smoke.yaml")
+    assert smoke["paths"]["results_dir"] == "results/smoke"
+    assert smoke["features"] == base["features"]  # not overridden -> inherited
+    assert load_config("configs/real_only.yaml")["dataset"]["damage_types"] == ["healthy", "real"]

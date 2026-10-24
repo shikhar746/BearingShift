@@ -1,0 +1,7 @@
+# Healthy + real (accelerated-lifetime) damage only, as in Vieira et al. (arXiv:2509.22267),
+# who drop artificial damage because of its domain shift to real damage.
+base: default.yaml
+paths:
+  results_dir: results/real_only
+dataset:
+  damage_types: [healthy, real]

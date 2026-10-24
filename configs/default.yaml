@@ -10,13 +10,15 @@ paths:
 
 dataset:
   bearing_table: configs/paderborn_bearings.csv
-  # Download location as documented by the KAt data center (verify before use).
+  # Download link given on the official "data sets and download" page.
   download_base_url: https://groups.uni-paderborn.de/kat/BearingDataCenter/
   fs_hz: 64000
   vibration_channel: vibration_1
   recordings_per_condition: 20
+  # Which bearings to use. Combined-damage bearings (no single label) are always excluded.
+  damage_types: [healthy, artificial, real]
 
-# Test bearing type 6203 (Lessmeier et al. 2016 / KAt documentation; verify).
+# Test bearing type 6203, FAG (Lessmeier et al. 2016, PHME16 Table 1).
 geometry:
   n_balls: 8
   ball_diameter_mm: 6.75
@@ -29,7 +31,7 @@ windowing:
 
 features:
   bands_hz: [[0, 1000], [1000, 2000], [2000, 4000], [4000, 8000], [8000, 16000], [16000, 32000]]
-  envelope_band_hz: [2000, 10000]
+  envelope_band_hz: [500, 10000]  # as in Vieira et al. (arXiv:2509.22267) for PU
   n_harmonics: 3
   peak_search_bins: 1
   background_orders: [0.5, 12.0]

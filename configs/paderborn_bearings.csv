@@ -1,33 +1,33 @@
-bearing_id,damage_type,fault_location,verified
-K001,healthy,none,no
-K002,healthy,none,no
-K003,healthy,none,no
-K004,healthy,none,no
-K005,healthy,none,no
-K006,healthy,none,no
-KA01,artificial,outer,no
-KA03,artificial,outer,no
-KA05,artificial,outer,no
-KA06,artificial,outer,no
-KA07,artificial,outer,no
-KA08,artificial,outer,no
-KA09,artificial,outer,no
-KI01,artificial,inner,no
-KI03,artificial,inner,no
-KI05,artificial,inner,no
-KI07,artificial,inner,no
-KI08,artificial,inner,no
-KA04,real,outer,no
-KA15,real,outer,no
-KA16,real,outer,no
-KA22,real,outer,no
-KA30,real,outer,no
-KI04,real,inner,no
-KI14,real,inner,no
-KI16,real,inner,no
-KI17,real,inner,no
-KI18,real,inner,no
-KI21,real,inner,no
-KB23,real,combined,no
-KB24,real,combined,no
-KB27,real,combined,no
+bearing_id,damage_type,fault_location,source
+K001,healthy,none,PHME16 Table 7
+K002,healthy,none,PHME16 Table 7
+K003,healthy,none,PHME16 Table 7
+K004,healthy,none,PHME16 Table 7
+K005,healthy,none,PHME16 Table 7
+K006,healthy,none,PHME16 Table 7
+KA01,artificial,outer,PHME16 Table 4
+KA03,artificial,outer,PHME16 Table 4
+KA05,artificial,outer,PHME16 Table 4
+KA06,artificial,outer,PHME16 Table 4
+KA07,artificial,outer,PHME16 Table 4
+KA08,artificial,outer,PHME16 Table 4
+KA09,artificial,outer,PHME16 Table 4
+KI01,artificial,inner,PHME16 Table 4
+KI03,artificial,inner,PHME16 Table 4
+KI05,artificial,inner,PHME16 Table 4
+KI07,artificial,inner,PHME16 Table 4
+KI08,artificial,inner,PHME16 Table 4
+KA04,real,outer,PHME16 Table 5
+KA15,real,outer,PHME16 Table 5
+KA16,real,outer,PHME16 Table 5
+KA22,real,outer,PHME16 Table 5
+KA30,real,outer,PHME16 Table 5
+KI04,real,inner,PHME16 Table 5
+KI14,real,inner,PHME16 Table 5
+KI16,real,inner,PHME16 Table 5
+KI17,real,inner,PHME16 Table 5
+KI18,real,inner,PHME16 Table 5
+KI21,real,inner,PHME16 Table 5
+KB23,real,combined,PHME16 Table 5
+KB24,real,combined,PHME16 Table 5
+KB27,real,combined,PHME16 Table 5

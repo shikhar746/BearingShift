@@ -5,15 +5,14 @@ Usage: python scripts/build_index.py --config configs/default.yaml
 import argparse
 from pathlib import Path
 
-import yaml
-
+from bearingshift.config import load_config
 from bearingshift.data import build_index, load_bearing_table
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
-    cfg = yaml.safe_load(open(parser.parse_args().config))
+    cfg = load_config(parser.parse_args().config)
 
     index = build_index(cfg["paths"]["raw_dir"], load_bearing_table(cfg["dataset"]["bearing_table"]))
     out = Path(cfg["paths"]["index"])

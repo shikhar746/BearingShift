@@ -8,7 +8,7 @@ Leakage-free bearing fault diagnosis under operating-condition shift, on the Pad
 
 ## Why
 
-Random window splits put windows from the *same recording* in both train and test. Recording- and condition-wise splits still put the *same physical bearing* on both sides. A model can then recognise the bearing instead of the fault. Recent work (arXiv:2509.22267; the PHME paper *"Test-Training Leakage in Evaluation of Machine Learning Algorithms for Condition-Based Maintenance"*) argues that this inflates reported accuracy. This project measures that inflation with the same features and models on every split.
+Random window splits put windows from the *same recording* in both train and test. Recording- and condition-wise splits still put the *same physical bearing* on both sides. A model can then recognise the bearing instead of the fault. Recent work (Vieira et al., arXiv:2509.22267; Matania et al., PHME 2024, *"Test-Training Leakage in Evaluation of Machine Learning Algorithms for Condition-Based Maintenance"*) argues that this inflates reported accuracy. This project measures that inflation with the same features and models on every split.
 
 ## Method
 
@@ -26,7 +26,7 @@ Random window splits put windows from the *same recording* in both train and tes
 4. **Features (23 per window):**
    - time-domain: RMS, kurtosis, skewness, crest factor, peak-to-peak
    - 6 log band energies
-   - envelope spectrum (band-pass 2–10 kHz → Hilbert envelope → FFT): peak-to-background ratio at BPFO, BPFI, BSF and FTF, harmonics 1–3, in **orders** of shaft speed
+   - envelope spectrum (band-pass 0.5–10 kHz → Hilbert envelope → FFT): peak-to-background ratio at BPFO, BPFI, BSF and FTF, harmonics 1–3, in **orders** of shaft speed
 
    Formulas (6203 bearing: 8 balls, d = 6.75 mm, D = 28.55 mm, φ = 0°):
    - BPFO = n/2·(1 − d/D·cosφ) = 3.054×
@@ -34,7 +34,7 @@ Random window splits put windows from the *same recording* in both train and tes
    - BSF = D/(2d)·(1 − (d/D·cosφ)²) = 1.997×
    - FTF = ½·(1 − d/D·cosφ) = 0.382×
 
-   Source: Randall & Antoni (2011); geometry per Lessmeier et al. (2016).
+   Source: Randall & Antoni (2011); geometry from Lessmeier et al. (2016), Table 1.
 5. **Models:** majority class, physics threshold rule, logistic regression on time-domain features, and LightGBM tuned by nested CV grouped like the outer split.
 6. **Metrics:** macro-AUROC, macro-F1, per-class recall; window and recording level; mean ± std over splits.
 7. **SHAP** on LightGBM (bearing-wise splits), with each feature's correlation to speed, torque and radial force.
@@ -63,7 +63,7 @@ SHAP finding (defect-frequency features vs condition artefacts): [placeholder].
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt && pip install -e .
-pytest                      # 27 tests: split leakage, features on synthetic signals, metrics
+pytest                      # 28 tests: split leakage, features on synthetic signals, metrics
 bash scripts/reproduce.sh   # lists files + size, asks before downloading, then runs everything
 ```
 
@@ -73,7 +73,7 @@ Extraction needs `unrar`, `unar`, `7z` or `bsdtar`. To check the pipeline withou
 
 ```
 bearingshift/   data.py splits.py windowing.py features.py models.py evaluate.py synthetic.py
-configs/        default.yaml (real data), smoke.yaml (synthetic), paderborn_bearings.csv, paderborn_sha256.txt
+configs/        default.yaml (real data), real_only.yaml, smoke.yaml (synthetic), paderborn_bearings.csv, paderborn_sha256.txt
 scripts/        download_paderborn.py build_index.py run_experiment.py reproduce.sh smoke_test.sh
 tests/          pytest suite
 results/        CSVs and plots written by run_experiment.py
@@ -81,8 +81,8 @@ results/        CSVs and plots written by run_experiment.py
 
 ## Limitations
 
-- The bearing table and 6203 geometry were transcribed from the dataset paper and are marked unverified until checked against the official KAt documentation.
-- Combined-damage bearings (KB23, KB24, KB27) are excluded.
+- Combined-damage bearings (KB23, KB24, KB27) are excluded, as in the dataset paper and Vieira et al.
+- The main run mixes artificial and real damage; `configs/real_only.yaml` repeats it with healthy + real only.
 - With only 6 healthy bearings, each bearing-wise test set holds 2 of them, so healthy-class recall is noisy.
 - The envelope band is fixed rather than chosen per signal (e.g. kurtogram).
 - BPFO lies 0.054 orders from the 3× shaft harmonic; at 1 s windows the first harmonic is close to the FFT resolution.

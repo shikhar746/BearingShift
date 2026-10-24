@@ -18,10 +18,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shap
-import yaml
 from matplotlib.patches import Patch
 
 from bearingshift import CLASSES
+from bearingshift.config import load_config
 from bearingshift.evaluate import (MODEL_COLORS, classification_metrics, plot_ladder, summarise,
                                    to_recording_level)
 from bearingshift.features import BearingGeometry, defect_orders, feature_family
@@ -71,7 +71,7 @@ def shap_report(shap_runs, windows, features, out):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
-    cfg = yaml.safe_load(open(parser.parse_args().config))
+    cfg = load_config(parser.parse_args().config)
     seed = cfg["seed"]
     random.seed(seed)
     np.random.seed(seed)
@@ -79,9 +79,11 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     index = pd.read_csv(cfg["paths"]["index"])
-    recordings = index.dropna(subset=["label"]).reset_index(drop=True)
-    print(f"{len(recordings)} labelled recordings from {recordings['bearing_id'].nunique()} bearings "
-          f"({len(index) - len(recordings)} combined-damage recordings excluded)")
+    labelled = index.dropna(subset=["label"])
+    recordings = labelled[labelled["damage_type"].isin(cfg["dataset"]["damage_types"])].reset_index(drop=True)
+    print(f"{len(recordings)} recordings from {recordings['bearing_id'].nunique()} bearings "
+          f"({len(index) - len(labelled)} combined-damage recordings excluded, "
+          f"damage types: {cfg['dataset']['damage_types']})")
 
     orders = defect_orders(BearingGeometry(**cfg["geometry"]))
     windows = feature_table(recordings, cfg, orders)

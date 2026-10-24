@@ -1,55 +1,15 @@
 # SMOKE TEST on synthetic data only. Outputs are NOT results; they only prove the pipeline runs.
-seed: 42
-
+base: default.yaml
 paths:
-  archive_dir: data/archives/paderborn
   raw_dir: data/synthetic/raw
   index: data/synthetic/index.csv
   feature_cache_dir: data/synthetic/interim
   results_dir: results/smoke
-
 dataset:
-  bearing_table: configs/paderborn_bearings.csv
-  # Download location as documented by the KAt data center (verify before use).
-  download_base_url: https://groups.uni-paderborn.de/kat/BearingDataCenter/
-  fs_hz: 64000
-  vibration_channel: vibration_1
   recordings_per_condition: 2
-
-# Test bearing type 6203 (Lessmeier et al. 2016 / KAt documentation; verify).
-geometry:
-  n_balls: 8
-  ball_diameter_mm: 6.75
-  pitch_diameter_mm: 28.55
-  contact_angle_deg: 0.0
-
-windowing:
-  window_s: 1.0
-  overlap: 0.0
-
-features:
-  bands_hz: [[0, 1000], [1000, 2000], [2000, 4000], [4000, 8000], [8000, 16000], [16000, 32000]]
-  envelope_band_hz: [2000, 10000]
-  n_harmonics: 3
-  peak_search_bins: 1
-  background_orders: [0.5, 12.0]
-
-split_types: [random_window, recording, condition, bearing]
 splits:
   random_window: {n_repeats: 3, test_size: 0.25}
   recording: {n_repeats: 3, test_size: 0.25}
-  condition: {}
   bearing: {n_repeats: 3, test_fraction: 0.25}
-
-models: [majority, physics_rule, logistic_time, lightgbm]
-
 lightgbm:
-  inner_folds: 3
-  param_grid:
-    num_leaves: [7]
-    n_estimators: [50]
-    learning_rate: [0.1]
-    min_child_samples: [20]
-
-# If bearing-wise LightGBM macro-F1 is above this, treat it as suspected leakage.
-leakage_alarm_f1: 0.95
+  param_grid: {num_leaves: [7], n_estimators: [50], learning_rate: [0.1], min_child_samples: [20]}
